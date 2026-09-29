@@ -1,0 +1,226 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>经营日报｜匿名演示</title><style>
+    :root {
+      color-scheme: dark;
+      --canvas: #07191b;
+      --surface: #0c2426;
+      --surface-strong: #113236;
+      --ink: #f1faf5;
+      --muted: #9db7b2;
+      --hairline: #315558;
+      --aqua: #5de2c0;
+      --blue: #78c9ff;
+      --yellow: #ffc857;
+      --rose: #ff8484;
+      --quiet: #56716f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: "HarmonyOS Sans SC", "HONOR Sans", "Noto Sans SC", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-text-size-adjust: 100%;
+    }
+    .page {
+      width: min(100%, 480px);
+      margin: 0 auto;
+      padding: 14px 14px 32px;
+      overflow: hidden;
+    }
+    .monitor-header {
+      position: relative;
+      padding: 17px 16px 15px;
+      border: 1px solid var(--hairline);
+      border-radius: 7px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+    .monitor-header::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: var(--aqua);
+    }
+    .monitor-topline, .section-heading, .metric-card__top, .row-head,
+    .detail-pair, .overview-row, .age-head, .foot-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .eyebrow, .utility-label, .section-kicker, .metric-card label, .data-label, .foot-label {
+      color: var(--muted);
+      font-family: "Cascadia Mono", "Consolas", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+    .monitor-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--aqua);
+      font-family: "Cascadia Mono", "Consolas", monospace;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      white-space: nowrap;
+    }
+    .monitor-state::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--aqua);
+      box-shadow: 0 0 0 3px rgba(93, 226, 192, .12);
+    }
+    h1, h2, p { margin: 0; }
+    h1 {
+      margin-top: 14px;
+      color: var(--ink);
+      font-family: "Bahnschrift", "HarmonyOS Sans SC", "HONOR Sans", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      font-size: 28px;
+      font-weight: 750;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+    .sub { margin-top: 6px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .primary-readout { margin-top: 22px; }
+    .primary-readout strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--blue);
+      font-family: "Bahnschrift", "Arial Narrow", "HarmonyOS Sans SC", "HONOR Sans", "Microsoft YaHei", sans-serif;
+      font-size: clamp(32px, 10.5vw, 47px);
+      font-weight: 800;
+      line-height: 1.03;
+      letter-spacing: 0;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+    .primary-readout small { display: block; margin-top: 8px; color: var(--muted); font-size: 12px; }
+    .signal-rail {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid var(--hairline);
+    }
+    .signal-cell {
+      position: relative;
+      min-width: 0;
+      padding-top: 9px;
+      color: var(--muted);
+      font-family: "Cascadia Mono", "Consolas", monospace;
+      font-size: 9px;
+      font-weight: 700;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .signal-cell::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--hairline); }
+    .signal-cell::after {
+      content: "";
+      position: absolute;
+      top: -3px;
+      left: calc(50% - 3px);
+      width: 7px;
+      height: 7px;
+      border: 2px solid var(--surface);
+      border-radius: 50%;
+      background: var(--aqua);
+    }
+    .section { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--hairline); }
+    .section-heading { margin-bottom: 12px; }
+    h2 {
+      color: var(--ink);
+      font-family: "Bahnschrift", "HarmonyOS Sans SC", "HONOR Sans", "Microsoft YaHei", sans-serif;
+      font-size: 17px;
+      font-weight: 750;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+    .section-kicker { flex: 0 0 auto; color: var(--aqua); text-align: right; white-space: nowrap; }
+    .focus-grid, .mini-list { display: grid; gap: 8px; }
+    .metric-card, .row-card {
+      min-width: 0;
+      padding: 13px;
+      border: 1px solid var(--hairline);
+      border-radius: 6px;
+      background: var(--surface);
+    }
+    .metric-card--sales { border-color: rgba(120, 201, 255, .55); background: var(--surface-strong); }
+    .metric-card strong {
+      display: block;
+      margin-top: 8px;
+      font-family: "Bahnschrift", "Arial Narrow", "HarmonyOS Sans SC", "HONOR Sans", "Microsoft YaHei", sans-serif;
+      font-size: clamp(23px, 7.5vw, 34px);
+      font-weight: 800;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+    .metric-card small { display: block; margin-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .accent { color: var(--blue); }
+    .good { color: var(--aqua); }
+    .warn { color: var(--yellow); }
+    .risk { color: var(--rose); }
+    .row-card { position: relative; padding-left: 14px; overflow: hidden; }
+    .row-card::before { content: ""; position: absolute; inset: 12px auto 12px 0; width: 2px; background: var(--quiet); }
+    .row-card--risk::before { background: var(--rose); }
+    .row-card--aqua::before { background: var(--aqua); }
+    .row-head { align-items: flex-start; }
+    .name { min-width: 0; color: var(--ink); font-size: 14px; font-weight: 750; line-height: 1.45; overflow-wrap: anywhere; }
+    .value {
+      flex: 0 0 auto;
+      max-width: 52%;
+      color: var(--blue);
+      font-family: "Bahnschrift", "Arial Narrow", "HarmonyOS Sans SC", "HONOR Sans", "Microsoft YaHei", sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.35;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+    }
+    .note { margin-top: 6px; color: var(--muted); font-size: 12px; line-height: 1.55; overflow-wrap: anywhere; }
+    .meta-line { display: flex; flex-wrap: wrap; gap: 5px 8px; margin-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .meta-line span + span::before { content: "·"; margin-right: 8px; color: var(--quiet); }
+    .detail-pairs { display: grid; gap: 0; margin-top: 10px; border-top: 1px solid var(--hairline); }
+    .detail-pair { min-width: 0; padding-top: 7px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .detail-pair strong { max-width: 62%; color: var(--ink); font-family: "Consolas", monospace; font-size: 12px; text-align: right; overflow-wrap: anywhere; }
+    .status-yes { color: var(--aqua) !important; }
+    .status-no { color: var(--muted) !important; }
+    .bar { height: 6px; margin-top: 10px; overflow: hidden; border-radius: 3px; background: #193a3d; }
+    .bar > span { display: block; height: 100%; border-radius: inherit; background: var(--aqua); }
+    .bar--risk > span { background: var(--rose); }
+    .overview-list, .aging-stack { display: grid; border-top: 1px solid var(--hairline); }
+    .overview-row, .aging-line { padding: 11px 0; border-bottom: 1px solid var(--hairline); }
+    .overview-row span { color: var(--muted); font-size: 13px; }
+    .overview-row strong { max-width: 64%; color: var(--ink); font-family: "Consolas", monospace; font-size: 14px; text-align: right; overflow-wrap: anywhere; }
+    .age-head { align-items: baseline; }
+    .aging-label { color: var(--ink); font-size: 13px; font-weight: 700; }
+    .aging-number { max-width: 68%; color: var(--muted); font-family: "Consolas", monospace; font-size: 11px; text-align: right; overflow-wrap: anywhere; }
+    .foot { margin: 23px 2px 0; padding-top: 13px; border-top: 1px solid var(--hairline); color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .foot-label { margin-bottom: 6px; color: var(--aqua); }
+    @media (min-width: 390px) {
+      .focus-grid { grid-template-columns: 1fr 1fr; }
+      .metric-card--sales { grid-column: 1 / -1; }
+      .metric-card:not(.metric-card--sales) { min-height: 150px; }
+      .metric-card:not(.metric-card--sales) strong { font-size: clamp(18px, 4.8vw, 22px); white-space: nowrap; }
+    }
+    @media (max-width: 360px) {
+      .page { padding-left: 10px; padding-right: 10px; }
+      .monitor-header { padding-left: 14px; padding-right: 14px; }
+      .metric-card, .row-card { padding-left: 11px; padding-right: 11px; }
+      h1 { font-size: 25px; }
+      .primary-readout strong { font-size: 32px; }
+      .value { max-width: 48%; font-size: 15px; }
+      .signal-cell { font-size: 8px; }
+    }
+  body{font-family:"Microsoft YaHei","Segoe UI",sans-serif}.data-label{font-size:12px}.section-kicker{font-size:12px}.capture-note{padding:16px 18px;color:#9db7b2;font-size:13px;border-top:1px solid #315558}.page{padding-bottom:0}.mini-list{gap:10px}</style></head><body><main class="page"><header class="monitor-header"><div class="monitor-topline"><div class="eyebrow">DEMO / OPERATING MONITOR</div><div class="monitor-state">演示数据</div></div><h1>经营日报</h1><div class="sub">数据示例 2026-09-28 ｜ 外部作品展示</div><div class="primary-readout"><div class="utility-label">当日销售额 / 价税合计</div><strong>¥268,400.0</strong><small>12 张出库单 ｜ 匿名账套 A / B / C / D</small></div><div class="signal-rail"><div class="signal-cell">出库</div><div class="signal-cell">应收</div><div class="signal-cell">账龄</div><div class="signal-cell">客户</div></div></header><section class="section"><div class="section-heading"><h2>今日重点</h2><span class="section-kicker">KEY READOUT</span></div><div class="focus-grid"><article class="metric-card"><div class="metric-card__top"><label>当日销售额</label><span class="data-label">DEMO</span></div><strong class="accent">¥268,400.0</strong><small>12 张出库单 ｜ 按价税合计</small></article><article class="metric-card"><div class="metric-card__top"><label>当前应收余额</label><span class="data-label">DEMO</span></div><strong class="good">¥2,000,000.0</strong><small>逾期 ¥420,000.0 ｜ 逾期率 21.0%</small></article><article class="metric-card"><div class="metric-card__top"><label>90天以上应收</label><span class="data-label">DEMO</span></div><strong class="risk">¥160,000.0</strong><small>占当前应收 8.0% ｜ 重点跟进</small></article></div></section><section class="section"><div class="section-heading"><h2>当日销售客户明细</h2><span class="section-kicker">3 个示例客户</span></div><div class="mini-list"><article class="row-card row-card--aqua"><div class="row-head"><div class="name">渠道客户 B01</div><div class="value">¥124,800.0</div></div><div class="meta-line"><span>渠道一部</span><span>销售顾问 02</span><span>5 张出库单</span></div><div class="detail-pairs"><div class="detail-pair"><span>当日价税合计</span><strong>¥124,800.0</strong></div><div class="detail-pair"><span>是否有应收</span><strong class="status-yes">有应收</strong></div><div class="detail-pair"><span>应收总金额</span><strong>¥350,000.0</strong></div></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">机构客户 A01</div><div class="value">¥95,600.0</div></div><div class="meta-line"><span>机构业务部</span><span>销售顾问 01</span><span>4 张出库单</span></div><div class="detail-pairs"><div class="detail-pair"><span>当日价税合计</span><strong>¥95,600.0</strong></div><div class="detail-pair"><span>是否有应收</span><strong class="status-yes">有应收</strong></div><div class="detail-pair"><span>应收总金额</span><strong>¥420,000.0</strong></div></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">线上客户 C01</div><div class="value">¥48,000.0</div></div><div class="meta-line"><span>线上业务部</span><span>销售顾问 03</span><span>3 张出库单</span></div><div class="detail-pairs"><div class="detail-pair"><span>当日价税合计</span><strong>¥48,000.0</strong></div><div class="detail-pair"><span>是否有应收</span><strong class="status-yes">有应收</strong></div><div class="detail-pair"><span>应收总金额</span><strong>¥280,000.0</strong></div></div></article></div></section><section class="section"><div class="section-heading"><h2>销售概览</h2><span class="section-kicker">2023 至今</span></div><div class="overview-list"><div class="overview-row"><span>当日销售额</span><strong>¥268,400.0</strong></div><div class="overview-row"><span>本月销售额</span><strong>¥970,000.0</strong></div><div class="overview-row"><span>本季度销售额</span><strong>¥3,058,000.0</strong></div><div class="overview-row"><span>累计销售额</span><strong>¥30,406,000.0</strong></div></div></section><section class="section"><div class="section-heading"><h2>账龄结构</h2><span class="section-kicker">金额占比</span></div><div class="aging-stack"><div class="aging-line"><div class="age-head"><div class="aging-label">0-30天</div><div class="aging-number">¥1,120,000.0 ｜ 56%</div></div><div class="bar "><span style="width:56%"></span></div></div><div class="aging-line"><div class="age-head"><div class="aging-label">31-60天</div><div class="aging-number">¥460,000.0 ｜ 23%</div></div><div class="bar "><span style="width:23%"></span></div></div><div class="aging-line"><div class="age-head"><div class="aging-label">61-90天</div><div class="aging-number">¥260,000.0 ｜ 13%</div></div><div class="bar "><span style="width:13%"></span></div></div><div class="aging-line"><div class="age-head"><div class="aging-label">90天以上</div><div class="aging-number">¥160,000.0 ｜ 8%</div></div><div class="bar bar--risk"><span style="width:8%"></span></div></div></div></section><section class="section"><div class="section-heading"><h2>区域账龄结构</h2><span class="section-kicker">匿名区域</span></div><div class="mini-list"><article class="row-card row-card--aqua"><div class="row-head"><div class="name">区域 A</div><div class="value">¥680,000.0</div></div><div class="meta-line"><span>占比 34%</span><span>逾期率 21.0%</span></div><div class="note">逾期 ¥142,800.0 ｜ 90天以上 ¥54,400.0</div><div class="bar"><span style="width:34%"></span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">区域 B</div><div class="value">¥600,000.0</div></div><div class="meta-line"><span>占比 30%</span><span>逾期率 21.0%</span></div><div class="note">逾期 ¥126,000.0 ｜ 90天以上 ¥48,000.0</div><div class="bar"><span style="width:30%"></span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">区域 C</div><div class="value">¥380,000.0</div></div><div class="meta-line"><span>占比 19%</span><span>逾期率 21.0%</span></div><div class="note">逾期 ¥79,800.0 ｜ 90天以上 ¥30,400.0</div><div class="bar"><span style="width:19%"></span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">区域 D</div><div class="value">¥340,000.0</div></div><div class="meta-line"><span>占比 17%</span><span>逾期率 21.0%</span></div><div class="note">逾期 ¥71,400.0 ｜ 90天以上 ¥27,200.0</div><div class="bar"><span style="width:17%"></span></div></article></div></section><section class="section"><div class="section-heading"><h2>部门应收余额</h2><span class="section-kicker">4 个示例部门</span></div><div class="mini-list"><article class="row-card row-card--aqua"><div class="row-head"><div class="name">机构业务部</div><div class="value">¥680,000.0</div></div><div class="note">34% / 当前应收</div><div class="bar"><span style="width:100%"></span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">渠道一部</div><div class="value">¥600,000.0</div></div><div class="note">30% / 当前应收</div><div class="bar"><span style="width:88.23529411764706%"></span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">渠道二部</div><div class="value">¥380,000.0</div></div><div class="note">19% / 当前应收</div><div class="bar"><span style="width:55.88235294117647%"></span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">线上业务部</div><div class="value">¥340,000.0</div></div><div class="note">17% / 当前应收</div><div class="bar"><span style="width:50%"></span></div></article></div></section><section class="section"><div class="section-heading"><h2>KA客户应收</h2><span class="section-kicker">按年份</span></div><div class="mini-list"><article class="row-card row-card--aqua"><div class="row-head"><div class="name">机构客户 A01</div><div class="value">¥280,000.0</div></div><div class="meta-line"><span>2026</span><span>机构业务部</span><span>KA客户</span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">机构客户 A01</div><div class="value">¥140,000.0</div></div><div class="meta-line"><span>2025</span><span>机构业务部</span><span>KA客户</span></div></article></div></section><section class="section"><div class="section-heading"><h2>客户应收余额</h2><span class="section-kicker">示例 TOP 6</span></div><div class="mini-list"><article class="row-card row-card--aqua"><div class="row-head"><div class="name">机构客户 A01</div><div class="value">¥420,000.0</div></div><div class="note">机构业务部</div><div class="bar"><span style="width:100%"></span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">渠道客户 B01</div><div class="value">¥350,000.0</div></div><div class="note">渠道一部</div><div class="bar"><span style="width:83.33333333333333%"></span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">渠道客户 B02</div><div class="value">¥320,000.0</div></div><div class="note">渠道二部</div><div class="bar"><span style="width:76.19047619047619%"></span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">线上客户 C01</div><div class="value">¥280,000.0</div></div><div class="note">线上业务部</div><div class="bar"><span style="width:66.66666666666667%"></span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">机构客户 A02</div><div class="value">¥210,000.0</div></div><div class="note">机构业务部</div><div class="bar"><span style="width:50%"></span></div></article><article class="row-card row-card--aqua"><div class="row-head"><div class="name">渠道客户 B03</div><div class="value">¥180,000.0</div></div><div class="note">渠道一部</div><div class="bar"><span style="width:42.857142857142854%"></span></div></article></div></section><footer class="foot"><div class="foot-label">外部展示说明</div>本页为原项目界面的演示版本，所有名称、金额、比例和单据数量均为模拟数据。用于展示数据组织、可视化与日报阅读体验。</footer></main></body></html>
